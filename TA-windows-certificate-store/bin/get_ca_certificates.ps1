@@ -129,6 +129,7 @@
     .OUTPUTS
     PSObject
 #>
+
 [CmdletBinding()]
 Param (
         
@@ -139,17 +140,17 @@ Param (
     # Fields in the Certificate Authority Database to Export
     [String[]]
     $Properties = (
-        'Issued Common Name', 
-        'Certificate Expiration Date', 
-        'Certificate Effective Date', 
-        'Certificate Template', 
+        'Issued Common Name',
+        'Serial Number',
+        'Certificate Expiration Date',
+        'Certificate Effective Date',
+        'Certificate Template',
         'Issued Email Address',
-        'Issued Request ID', 
-        'Certificate Hash', 
+        'Issued Request ID',
+        'Certificate Hash',
         'Request Disposition',
-        'Request Disposition Message', 
+        'Request Disposition Message',
         'Requester Name' ),
-
 
     [AllowNull()]
     # Certificate Authority location string "computername\CAName" (Default gets location strings from Current Domain)
@@ -380,95 +381,98 @@ if(-not $CAlocation){
     $CAlocation =  (get-CaLocationString)
 }
 
-    
-foreach ($Location in $CAlocation) 
-{
-    $CaView = New-Object -ComObject CertificateAuthority.View
-    $null = $CaView.OpenConnection($Location)
-    $CaView.SetResultColumnCount($Properties.Count)
-    
-    #region SetOutput Colum
-    foreach ($item in $Properties)
+try{
+    foreach ($Location in $CAlocation)
     {
-        $index = $CaView.GetColumnIndex($false, $item)
-        $CaView.SetResultColumn($index)
-    }
-    #endregion
+        $CaView = New-Object -ComObject CertificateAuthority.View
+        $null = $CaView.OpenConnection($Location)
+        $CaView.SetResultColumnCount($Properties.Count)
 
-    #region Filters
-    $CVR_SEEK_EQ = 1
-    $CVR_SEEK_LT = 2
-    $CVR_SEEK_GT = 16
-    
-    #region filter expiration Date
-    $index = $CaView.GetColumnIndex($false, 'Certificate Expiration Date')
-    $now = Get-Date
-    $expirationdate = $now.AddDays($ExpireInDays)
-    if ($ExpireInDays -gt 0)
-    { 
-        $CaView.SetRestriction($index,$CVR_SEEK_GT,0,$now)
-        $CaView.SetRestriction($index,$CVR_SEEK_LT,0,$expirationdate)
-    }
-    else 
-    {
-        $CaView.SetRestriction($index,$CVR_SEEK_LT,0,$now)
-        $CaView.SetRestriction($index,$CVR_SEEK_GT,0,$expirationdate)
-    }
-    #endregion filter expiration date
-
-    #region Filter Template
-    if ($CertificateTemplateOid)
-    {
-        $index = $CaView.GetColumnIndex($false, 'Certificate Template')
-        $CaView.SetRestriction($index,$CVR_SEEK_EQ,0,$CertificateTemplateOid)
-    }
-    #endregion
-
-    #region Filter Issued Common Name
-    if ($CommonName)
-    {
-        $index = $CaView.GetColumnIndex($false, 'Issued Common Name')
-        $CaView.SetRestriction($index,$CVR_SEEK_EQ,0,$CommonName)
-    }
-    #endregion
-
-    #region Filter Only issued certificates
-    # 20 - issued certificates
-    $CaView.SetRestriction($CaView.GetColumnIndex($false, 'Request Disposition'),$CVR_SEEK_EQ,0,20)
-    #endregion
-
-    #endregion
-
-    #region output each retuned row
-    $CV_OUT_BASE64HEADER = 0 
-    $CV_OUT_BASE64 = 1 
-    $RowObj = $CaView.OpenView()
-    
-    $IssuerDN = (Get-CertificatAuthority).cACertificateDN
-
-    while ($RowObj.Next() -ne -1)
-    {
-        $Cert = New-Object -TypeName PsObject
-        $ColObj = $RowObj.EnumCertViewColumn()
-        $null = $ColObj.Next()
-        do 
+        #region SetOutput Colum
+        foreach ($item in $Properties)
         {
-            $displayName = $ColObj.GetDisplayName()
-            # format Binary Certificate in a savable format.
-            if ($displayName -eq 'Binary Certificate') 
-            {
-                $Cert | Add-Member -MemberType NoteProperty -Name $displayName.ToString().Replace(" ", "_") -Value $($ColObj.GetValue($CV_OUT_BASE64HEADER)) -Force
-            } else 
-            {
-                $Cert | Add-Member -MemberType NoteProperty -Name $displayName.ToString().Replace(" ", "_") -Value $($ColObj.GetValue($CV_OUT_BASE64)) -Force
-            }
+            $index = $CaView.GetColumnIndex($false, $item)
+            $CaView.SetResultColumn($index)
         }
-        until ($ColObj.Next() -eq -1)
-        Clear-Variable -Name ColObj
+        #endregion
 
-        if($ShowIssuer){$Cert | Add-Member -MemberType NoteProperty -Name "Issuer" -Value $IssuerDN}
+        #region Filters
+        $CVR_SEEK_EQ = 1
+        $CVR_SEEK_LT = 2
+        $CVR_SEEK_GT = 16
+
+        #region filter expiration Date
+        $index = $CaView.GetColumnIndex($false, 'Certificate Expiration Date')
+        $now = Get-Date
+        $expirationdate = $now.AddDays($ExpireInDays)
+        if ($ExpireInDays -gt 0)
+        {
+            $CaView.SetRestriction($index,$CVR_SEEK_GT,0,$now)
+            $CaView.SetRestriction($index,$CVR_SEEK_LT,0,$expirationdate)
+        }
+        else
+        {
+            $CaView.SetRestriction($index,$CVR_SEEK_LT,0,$now)
+            $CaView.SetRestriction($index,$CVR_SEEK_GT,0,$expirationdate)
+        }
+        #endregion filter expiration date
+
+        #region Filter Template
+        if ($CertificateTemplateOid)
+        {
+            $index = $CaView.GetColumnIndex($false, 'Certificate Template')
+            $CaView.SetRestriction($index,$CVR_SEEK_EQ,0,$CertificateTemplateOid)
+        }
+        #endregion
+
+        #region Filter Issued Common Name
+        if ($CommonName)
+        {
+            $index = $CaView.GetColumnIndex($false, 'Issued Common Name')
+            $CaView.SetRestriction($index,$CVR_SEEK_EQ,0,$CommonName)
+        }
+        #endregion
+
+        #region Filter Only issued certificates
+        # 20 - issued certificates
+        $CaView.SetRestriction($CaView.GetColumnIndex($false, 'Request Disposition'),$CVR_SEEK_EQ,0,20)
+        #endregion
+
+        #endregion
+
+        #region output each retuned row
+        $CV_OUT_BASE64HEADER = 0
+        $CV_OUT_BASE64 = 1
+        $RowObj = $CaView.OpenView()
         
-        $Cert
+        $IssuerDN = (Get-CertificatAuthority).cACertificateDN
 
+        while ($RowObj.Next() -ne -1)
+        {
+            $Cert = New-Object -TypeName PsObject
+            $ColObj = $RowObj.EnumCertViewColumn()
+            $null = $ColObj.Next()
+            do
+            {
+                $displayName = $ColObj.GetDisplayName()
+                # format Binary Certificate in a savable format.
+                if ($displayName -eq 'Binary Certificate')
+                {
+                    $Cert | Add-Member -MemberType NoteProperty -Name $displayName.ToString().Replace(" ", "_") -Value $($ColObj.GetValue($CV_OUT_BASE64HEADER)) -Force
+                } else
+                {
+                    $Cert | Add-Member -MemberType NoteProperty -Name $displayName.ToString().Replace(" ", "_") -Value $($ColObj.GetValue($CV_OUT_BASE64)) -Force
+                }
+            }
+            until ($ColObj.Next() -eq -1)
+            Clear-Variable -Name ColObj
+
+            if($ShowIssuer){$Cert | Add-Member -MemberType NoteProperty -Name "Issuer" -Value $IssuerDN}
+            
+            $Cert
+
+        }
     }
+}catch [Exception]{
+    Write-Error $_.Exception.Message
 }
