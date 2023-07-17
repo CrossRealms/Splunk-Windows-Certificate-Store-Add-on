@@ -1,0 +1,94 @@
+# Windows Certificate Store Add-on for Splunk
+
+### Download from Splunkbase
+TODO
+
+
+OVERVIEW
+--------
+The Windows Certificate Store Add-on for Splunk allows users to collect the certificate metadata from Windows Certificate Stores and AD's Certificate Authority. It uses the PowerShell script to collect the metadata regarding the certificates available on the Certificate Store of Windows machines and Certificate Authority's Certificate Store. The Add-on does not contain any dashboards or savedsearches.
+
+Install the Cyences App for Splunk (https://splunkbase.splunk.com/app/5351/) to get alerts and dashboards related to the data collected by this Add-on.
+
+
+* Author - CrossRealms International Inc.
+* Creates Index - False
+* Compatible with:
+   * Splunk Enterprise version: 9.0.x, 8.2.x
+   * OS: Platform Independent
+   * Browser: Does not have UI.
+
+
+
+TOPOLOGY AND SETTING UP SPLUNK ENVIRONMENT
+------------------------------------------
+There are two ways to setup this app:
+  1. Standalone Mode: 
+     * Install the `Windows Certificate Store Add-on`.
+  2. Distributed Mode:
+     * The Add-on is required on search head for field extraction.
+     * Install the `Windows Certificate Store Add-on` on the Universal Forwarders on Windows and configure it. (You could do that from Deployment Server.)
+     * Install the Add-on on a heavy forwarder if Universal Forwarder is forwarding to Heavy Forwarder. Otherwise, install it on an Indexers. Input configuration is not required for both Indexers and Heavy Forwarders.
+
+
+DEPENDENCIES
+------------------------------------------------------------
+* There are no external dependencies for this Add-on.
+
+
+INSTALLATION
+------------------------------------------------------------
+* From the Splunk Home page, click the gear icon next to Apps.
+* Click `Browse more apps`.
+* Search for `Windows Certificate Store Add-on`.
+* Click `Install`.
+* If prompted, restart Splunk.
+
+
+DATA COLLECTION & CONFIGURATION
+------------------------------------------------------------
+### Enable Data Inputs ###
+* Add the following stanzas in `TA-windows-certificate-store/local/inputs.conf` file and deploy it for all required Windows hosts.
+```
+[powershell://windows_firewall_status_check]
+disabled = 0
+```
+
+* The will be collected under `wincertstore` index, hence ensure your Indexers or Standalone machine has that index created.
+
+
+
+UNINSTALL ADD-ON
+-------------
+1. SSH to the Splunk instance.
+2. Navigate to apps ($SPLUNK_HOME/etc/apps).
+3. Remove the `TA-windows-certificate-store` folder from the `apps` directory.
+4. Restart Splunk.
+
+
+RELEASE NOTES
+-------------
+Version 1.0.0 (August 2023)
+* Created Add-on with Powershell script and required configuration to collect the data.
+
+
+
+OPEN SOURCE COMPONENTS AND LICENSES
+------------------------------
+* N/A
+
+
+CONTRIBUTORS
+------------
+* Vatsal Jagani
+* Mahir Chavda
+* Hardik Dholariya
+
+
+
+SUPPORT
+-------
+* Contact - CrossRealms International Inc.
+  * US: +1-312-2784445
+* License Agreement - https://d38o4gzaohghws.cloudfront.net/static/misc/eula.html
+* Copyright - Copyright CrossRealms Internationals, 2023
