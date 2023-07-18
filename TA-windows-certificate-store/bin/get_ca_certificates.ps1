@@ -11,6 +11,7 @@
 
     -Default Fields Exported
         Issued Common Name
+        Serial Number
         Certificate Expiration Date
         Certificate Effective Date
         Certificate Template
@@ -116,13 +117,13 @@
     Switch to include Issuer DN in output, default is True
     
     .EXAMPLE
-    Get-CAIssuedCertificates.ps1
+    get_ca_certificates.ps1
     This will collect all issued certificates from local CA  
         
     .EXAMPLE
-    Get-CAIssuedCertificates.ps1 -CALocation "computername\CAName"
+    get_ca_certificates.ps1 -CALocation "computername\CAName"
 
-    Get-CAIssuedCertificates.ps1 -CALocation CASVR01\ORG-CA
+    get_ca_certificates.ps1 -CALocation CASVR01\ORG-CA
 
     This will collect all issued certificates from the ORG-CA instance located on the CASVR01 server
         
