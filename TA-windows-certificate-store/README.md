@@ -57,7 +57,7 @@ disabled = 0
 disabled = 0
 ```
 
-* The will be collected under `wincertstore` index, hence ensure your Indexers or Standalone machine has that index created.
+* The will be collected under `wincerts` index, hence ensure your Indexers or Standalone machine has that index created.
 
 
 
