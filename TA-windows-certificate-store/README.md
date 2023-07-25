@@ -26,9 +26,9 @@ There are two ways to setup this app:
   1. Standalone Mode: 
      * Install the `Windows Certificate Store Add-on`.
   2. Distributed Mode:
-     * The Add-on is required on search head for field extraction.
+     * The Add-on is required on the Search Head for field extraction.
      * Install the `Windows Certificate Store Add-on` on the Universal Forwarders on Windows and configure it. (You could do that from Deployment Server.)
-     * Install the Add-on on a heavy forwarder if Universal Forwarder is forwarding to Heavy Forwarder. Otherwise, install it on an Indexers. Input configuration is not required for both Indexers and Heavy Forwarders.
+     * Install the Add-on on a heavy forwarder if forwarders are sending data to Heavy Forwarder, otherwise install it on Indexers for data parsing. Input configuration is not required for both indexers and heavy forwarders.
 
 
 DEPENDENCIES
