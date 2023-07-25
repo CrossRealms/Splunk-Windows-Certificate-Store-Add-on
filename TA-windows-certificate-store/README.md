@@ -14,7 +14,7 @@ Install the Cyences App for Splunk (https://splunkbase.splunk.com/app/5351/) to 
 * Author - CrossRealms International Inc.
 * Creates Index - False
 * Compatible with:
-   * Splunk Enterprise version: 9.0.x, 8.2.x
+   * Splunk Enterprise version: 9.1.x, 9.0.x, 8.2.x
    * OS: Platform Independent
    * Browser: Does not have UI.
 
@@ -50,11 +50,14 @@ DATA COLLECTION & CONFIGURATION
 ### Enable Data Inputs ###
 * Add the following stanzas in `TA-windows-certificate-store/local/inputs.conf` file and deploy it for all required Windows hosts.
 ```
-[powershell://windows_firewall_status_check]
+[powershell://CertStore-CA-Server]
+disabled = 0
+
+[powershell://CertStore-Local-Windows-Machine]
 disabled = 0
 ```
 
-* The will be collected under `wincertstore` index, hence ensure your Indexers or Standalone machine has that index created.
+* The will be collected under `wincerts` index, hence ensure your Indexers or Standalone machine has that index created.
 
 
 
