@@ -77,7 +77,7 @@ UNINSTALL ADD-ON
 RELEASE NOTES
 -------------
 Version 1.0.1 (September 2023)
-* Fixed the ssl_end_time field extraction issue.
+* Fixed the ssl_end_time and ssl_subject field extraction issue.
 
 Version 1.0.0 (August 2023)
 * Created Add-on with Powershell script and required configuration to collect the data.
