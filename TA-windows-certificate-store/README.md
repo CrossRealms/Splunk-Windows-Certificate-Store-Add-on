@@ -76,6 +76,9 @@ UNINSTALL ADD-ON
 
 RELEASE NOTES
 -------------
+Version 1.0.2 (September 2025)
+* Updated readme file.
+
 Version 1.0.1 (September 2023)
 * Fixed the ssl_end_time and ssl_subject field extraction issue.
 
@@ -94,6 +97,7 @@ CONTRIBUTORS
 * Vatsal Jagani
 * Mahir Chavda
 * Hardik Dholariya
+* Madhav Pandya
 
 
 
@@ -102,5 +106,5 @@ SUPPORT
 * Contact - CrossRealms International Inc.
   * US: +1-312-2784445
 * License Agreement - https://d38o4gzaohghws.cloudfront.net/static/misc/eula.html
-* Copyright - Copyright CrossRealms Internationals, 2023
+* Copyright - © 2025 CrossRealms International
 
