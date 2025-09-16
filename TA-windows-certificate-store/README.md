@@ -13,7 +13,7 @@ Install the Cyences App for Splunk (https://splunkbase.splunk.com/app/5351/) to 
 * Author - CrossRealms International Inc.
 * Creates Index - False
 * Compatible with:
-   * Splunk Enterprise version: 9.1.x, 9.0.x, 8.2.x
+   * Splunk Enterprise version: 10.0.x, 9.4.x, 9.3.x, 9.2.x, 9.1.x, 9.0.x
    * OS: Platform Independent
    * Browser: Does not have UI.
 
@@ -77,7 +77,7 @@ UNINSTALL ADD-ON
 RELEASE NOTES
 -------------
 Version 1.0.2 (September 2025)
-* Updated readme file.
+* Minor document change.
 
 Version 1.0.1 (September 2023)
 * Fixed the ssl_end_time and ssl_subject field extraction issue.
